@@ -5,14 +5,12 @@ namespace App\Models;
 use App\Traits\HasCreator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Kalnoy\Nestedset\NodeTrait;
 
-class Category extends Model
+class Role extends Model
 {
-    use HasFactory, SoftDeletes, HasCreator, NodeTrait;
+    use HasFactory, HasCreator;
 
-    protected $table = 'base_categories';
+    protected $table = 'base_roles';
 
     /**
      * The attributes that are mass assignable.
@@ -21,13 +19,16 @@ class Category extends Model
      */
     protected $fillable = [
         'name',
-        'slug',
         'created_by'
     ];
 
-    public function categorizables()
+    public function routes()
     {
-        return $this->hasMany(Categorizable::class);
+        return $this->hasMany(RoleRoute::class);
     }
-    
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'base_user_roles','role_id','user_id');
+    }
 }
