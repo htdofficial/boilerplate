@@ -29,9 +29,26 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            Route::middleware('api')
-                ->prefix('api')
-                ->group(base_path('routes/api.php'));
+            // public api route
+            Route::prefix('api')->group(function(){
+
+                request()->headers->set('Accept', 'application/json');
+    
+                Route::prefix('v1')->group(function(){
+                    Route::post('login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+                    Route::post('forgot-password', [\App\Http\Controllers\Api\AuthController::class, 'forgotPassword']);
+                    Route::post('reset-password', [\App\Http\Controllers\Api\AuthController::class, 'resetPassword']);
+
+                    Route::middleware(['api','auth:api'])->group(function(){
+                        Route::get('logout', [\App\Http\Controllers\Api\AuthController::class, 'logout'])->name('logout');
+                        Route::get('profile', [\App\Http\Controllers\Api\AuthController::class, 'profile'])->name('profile');
+                        
+                        Route::middleware('is_allowed')->group(base_path('routes/api/v1.php'));
+                    });
+                });
+                
+            });
+
 
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
