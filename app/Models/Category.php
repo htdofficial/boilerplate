@@ -6,10 +6,11 @@ use App\Traits\HasCreator;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Kalnoy\Nestedset\NodeTrait;
 
 class Category extends Model
 {
-    use HasFactory, SoftDeletes, HasCreator;
+    use HasFactory, SoftDeletes, HasCreator, NodeTrait;
 
     protected $table = 'base_categories';
 

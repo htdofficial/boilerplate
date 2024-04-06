@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('base_categories', function (Blueprint $table) {
+        Schema::create('base_user_roles', function (Blueprint $table) {
             $table->id();
-            $table->nestedSet();
-
-            $table->string('name');
-            $table->string('slug');
             
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('base_users');
+            
+            $table->unsignedBigInteger('role_id');
+            $table->foreign('role_id')->references('id')->on('base_roles');
+
             $table->timestamps();
-            $table->softDeletes();
 
             $table->unsignedBigInteger('created_by');
             $table->foreign('created_by')->references('id')->on('base_users');
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('base_categories');
+        Schema::dropIfExists('user_roles');
     }
 };

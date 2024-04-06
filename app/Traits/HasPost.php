@@ -16,4 +16,5 @@ trait HasPost
     {
         return $this->posts->last();
     }
+    
 }
