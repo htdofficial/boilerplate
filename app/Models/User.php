@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -56,20 +57,30 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class, 'base_user_roles', 'role_id', 'user_id');
     }
 
-    public function canAccess(string|array $routeName)
+    public function canAccess(string $routeName)
     {
-        if(!is_array($routeName))
-        {
-            $routeName = [$routeName];
-        }
+        $routes = $this->routes();
+        $matches = array_filter($routes, function($pattern) use ($routeName) {
+            return fnmatch($pattern, $routeName);
+        });
 
-        return $this->roles()->whereHas('routes', function($query) use ($routeName){
-            $query->whereIn('route_name', $routeName);
-        })->exists();
+        return !empty($matches);
     }
 
     public function menus()
     {
         return $this->hasManyThrough(Menu::class, Role::class);
+    }
+
+    public function routes()
+    {
+        return DB::table('base_role_routes')
+            ->select('base_role_routes.route_name')
+            ->join('base_roles', 'base_roles.id','=','base_role_routes.role_id')
+            ->join('base_user_roles','base_user_roles.role_id','=','base_roles.id')
+            ->where('base_user_roles.user_id', $this->id)
+            ->get()
+            ->pluck('route_name')->toArray()
+        ;
     }
 }
