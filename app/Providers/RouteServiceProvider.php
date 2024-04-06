@@ -29,9 +29,9 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         $this->routes(function () {
-            // public api route
             Route::prefix('api')->group(function(){
-
+                
+                // force json response
                 request()->headers->set('Accept', 'application/json');
     
                 Route::prefix('v1')->group(function(){
