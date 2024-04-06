@@ -26,6 +26,11 @@ class Role extends Model
     {
         return $this->hasMany(RoleRoute::class);
     }
+    
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
 
     public function users()
     {

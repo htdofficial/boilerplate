@@ -55,4 +55,21 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'base_user_roles', 'role_id', 'user_id');
     }
+
+    public function canAccess(string|array $routeName)
+    {
+        if(!is_array($routeName))
+        {
+            $routeName = [$routeName];
+        }
+
+        return $this->roles()->whereHas('routes', function($query) use ($routeName){
+            $query->whereIn('route_name', $routeName);
+        })->exists();
+    }
+
+    public function menus()
+    {
+        return $this->hasManyThrough(Menu::class, Role::class);
+    }
 }
