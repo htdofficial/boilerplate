@@ -20,6 +20,7 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'parent_id',
         'name',
         'slug',
         'created_by'

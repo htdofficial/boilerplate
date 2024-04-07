@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('slug');
             $table->longText('content');
-            $table->json('metadata');
+            $table->json('metadata')->nullable();
             $table->string('record_type')->nullable();
             $table->enum('visibility', ['DRAFT','PRIVATE','PUBLISH'])->default('DRAFT');
 
