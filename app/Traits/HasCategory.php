@@ -8,7 +8,7 @@ trait HasCategory {
 
     public function categories()
     {
-        return $this->morphToMany(Category::class, 'entity', 'base_categorizables', null, 'entity_id');
+        return $this->morphToMany(Category::class, 'entity', 'base_categorizables', null, 'category_id');
     }
 
 }
